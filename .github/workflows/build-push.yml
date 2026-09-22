@@ -11,8 +11,8 @@ permissions:
   id-token: write
 
 env:
-  AWS_REGION: ${{ vars.AWS_REGION }}
-  AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+  AWS_REGION: ${{ secrets.AWS_REGION || vars.AWS_REGION || 'ap-south-1' }}
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID || vars.AWS_ACCOUNT_ID || '759712674659' }}
   ECR_REPOSITORY: school-service
 
 jobs:
