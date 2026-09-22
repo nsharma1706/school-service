@@ -11,8 +11,7 @@ permissions:
   id-token: write
 
 env:
-  AWS_REGION: ${{ secrets.AWS_REGION || vars.AWS_REGION || 'ap-south-1' }}
-  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID || vars.AWS_ACCOUNT_ID || '759712674659' }}
+  AWS_REGION: ap-south-1
   ECR_REPOSITORY: school-service
 
 jobs:
@@ -28,21 +27,21 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::759712674659:role/GitHubActionsSchoolServiceECR
           role-session-name: GitHubActions-${{ github.run_id }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ap-south-1
           audience: sts.amazonaws.com
+
+      - name: Verify AWS identity
+        run: aws sts get-caller-identity
 
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build and push image
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
-            ${{ env.REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest
+            759712674659.dkr.ecr.ap-south-1.amazonaws.com/school-service:${{ github.sha }}
+            759712674659.dkr.ecr.ap-south-1.amazonaws.com/school-service:latest
