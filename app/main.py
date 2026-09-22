@@ -107,7 +107,7 @@ async def register_student(registration: StudentRegistration) -> dict[str, str]:
         await redis.rpush(QUEUE, registration.model_dump_json())
     except Exception as error:
         raise HTTPException(status_code=503, detail="Registration queue unavailable") from error
-    return {"status": "queued"}
+    return {"status": "queue"}
 
 
 @app.get("/students", response_model=list[Student])
